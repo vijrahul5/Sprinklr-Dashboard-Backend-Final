@@ -1,10 +1,9 @@
 const employeeModel = require("../model/employeeModel");
-const secrets = require("../config/secrets");
 const { OAuth2Client } = require("google-auth-library");
 require("dotenv").config();
 const client = new OAuth2Client(`${process.env.CLIENT_ID}`);
 
-async function signIn(req, res){
+async function signIn(req, res) {
     try {
         const { token } = req.body;
         const ticket = await client.verifyIdToken({
@@ -27,7 +26,7 @@ async function signIn(req, res){
         res.json({
             status: "Success",
         });
-    } catch (err) {
+    } catch (err){
         res.json({
             status: "Failed",
             error: err.message,

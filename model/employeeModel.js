@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const secrets = require("../config/secrets");
 const Schema = mongoose.Schema;
 require("dotenv").config();
 
@@ -44,13 +43,10 @@ const employeeSchema = new Schema({
         type: String,
         maxlength: 300,
     },
-    manager: String,
-    team: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "employeeModel",
-        }
-    ],
+    manager: {
+        type: Schema.Types.ObjectId,
+        ref: "employeeModel",
+    },
 });
 
 const employeeModel = mongoose.model("employeeModel", employeeSchema);

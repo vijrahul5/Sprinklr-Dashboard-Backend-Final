@@ -1,6 +1,6 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const {protectRoute} = require("./controller/authController");
+const { protectRoute } = require("./controller/authController");
 const authRouter = require("./router/authRouter");
 const employeeRouter = require("./router/employeeRouter");
 require("dotenv").config();

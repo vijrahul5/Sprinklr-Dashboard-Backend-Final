@@ -5,7 +5,9 @@ const moment = require("moment");
 async function getProfile(req, res) {
     try {
         const email = req.email;
-        const employee = await employeeModel.findOne({ email });
+        const employee = await employeeModel
+            .findOne({ email })
+            .populate("manager", "email");
         if (employee) {
             res.json({
                 status: "Success",
@@ -47,28 +49,12 @@ async function updateProfile(req, res) {
 async function deleteProfile(req, res) {
     try {
         const email = req.email;
-        const employee = await employeeModel
-            .findOne({ email })
-            .populate("team", "email");
-        if (employee.manager) {
-            const manager = await employeeModel.findOne({
-                email: employee.manager,
-            });
-            if (manager) {
-                manager.team = manager.team.filter((teamMember) => {
-                    return teamMember.email !== employee.email;
-                });
-            } else {
-                throw new Error("Failed");
-            }
-        }
-        if(employee.team){
-            employee.team.forEach(async (teamMember)=>{
-                const teamMemberData = await employeeModel.findOne({email:teamMember.email});
-                teamMemberData.manager = undefined;
-                await teamMemberData.save(); 
-            });
-        }
+        const employee = await employeeModel.findOne({ email });
+        const team = await employeeModel.find({ manager: employee });
+        team.forEach(async (teamMember) => {
+            teamMember.manager = undefined;
+            await teamMember.save();
+        });
         await employeeModel.deleteOne(employee);
         return res.json({
             status: "Success",
@@ -198,11 +184,9 @@ async function deleteStandUp(req, res) {
 async function getTeam(req, res) {
     try {
         const email = req.email;
-        const employee = await employeeModel
-            .findOne({ email })
-            .populate("team", "name email");
+        const employee = await employeeModel.findOne({ email });
+        const team = await employeeModel.find({ manager: employee });
         if (employee) {
-            const team = employee.team;
             const teamStandUp = [];
             for (let i = 0; i < team.length; i++) {
                 const today = moment().startOf("day");
@@ -240,14 +224,11 @@ async function postTeam(req, res) {
     try {
         const email = req.email;
         const employeeEmail = req.body.employeeEmail;
-        console.log(email);
-        console.log(employeeEmail);
-        const manager = await employeeModel.findOne({ email }).populate("team");
+        const manager = await employeeModel.findOne({ email });
         const employee = await employeeModel.findOne({ email: employeeEmail });
 
         if (employee && manager) {
-            manager.team.push(employee);
-            employee.manager = manager.email;
+            employee.manager = manager;
 
             await manager.save();
             await employee.save();
@@ -268,14 +249,10 @@ async function deleteTeam(req, res) {
     try {
         const email = req.email;
         const employeeEmail = req.body.employeeEmail;
-
-        const manager = await employeeModel.findOne({ email }).populate("team");
+        const manager = await employeeModel.findOne({ email });
         const employee = await employeeModel.findOne({ email: employeeEmail });
 
         if (employee && manager) {
-            manager.team = manager.team.filter((teamMember) => {
-                return teamMember.email !== employee.email;
-            });
             employee.manager = undefined;
             await manager.save();
             await employee.save();
