@@ -3,6 +3,7 @@ const standUpModel = require("../model/standUpModel");
 const moment = require("moment");
 
 async function getProfile(req, res) {
+    // Gets Employee profile from the employee model
     try {
         const email = req.email;
         const employee = await employeeModel
@@ -25,6 +26,7 @@ async function getProfile(req, res) {
 }
 
 async function updateProfile(req, res) {
+    // Updates Employee profile in the employee model
     try {
         const email = req.email;
         const employee = await employeeModel.findOne({ email });
@@ -47,6 +49,7 @@ async function updateProfile(req, res) {
     }
 }
 async function deleteProfile(req, res) {
+    // Deletes Employee Profile from the employee model
     try {
         const email = req.email;
         const employee = await employeeModel.findOne({ email });
@@ -67,6 +70,7 @@ async function deleteProfile(req, res) {
     }
 }
 async function getStandUp(req, res) {
+    // Gets the employee's stand up from the stand up model
     try {
         const email = req.email;
         const employee = await employeeModel.findOne({ email });
@@ -97,6 +101,7 @@ async function getStandUp(req, res) {
     }
 }
 async function postStandUp(req, res) {
+    // Posts an employee's stand up to the stand up model
     try {
         const email = req.email;
         const employee = await employeeModel.findOne({ email });
@@ -123,6 +128,7 @@ async function postStandUp(req, res) {
 }
 
 async function updateStandUp(req, res) {
+    // Updates an employee's stand up for the day if it exists in the database
     try {
         const email = req.email;
         const employee = await employeeModel.findOne({ email });
@@ -155,6 +161,7 @@ async function updateStandUp(req, res) {
 }
 
 async function deleteStandUp(req, res) {
+    // Deletes an employee's stand up for the day
     try {
         const email = req.email;
         const employee = await employeeModel.findOne({ email });
@@ -182,6 +189,7 @@ async function deleteStandUp(req, res) {
 }
 
 async function getTeam(req, res) {
+    // Gets an Employee's team's data and the stand ups of the team members for the day
     try {
         const email = req.email;
         const employee = await employeeModel.findOne({ email });
@@ -221,6 +229,7 @@ async function getTeam(req, res) {
 }
 
 async function postTeam(req, res) {
+    // Adds a team member to the employee's team
     try {
         const email = req.email;
         const employeeEmail = req.body.employeeEmail;
@@ -246,6 +255,7 @@ async function postTeam(req, res) {
     }
 }
 async function deleteTeam(req, res) {
+    // Deletes a team member from the employee's team
     try {
         const email = req.email;
         const employeeEmail = req.body.employeeEmail;

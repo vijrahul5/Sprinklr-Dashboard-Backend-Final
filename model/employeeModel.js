@@ -16,6 +16,7 @@ mongoose
         console.log(err.message);
     });
 
+// Model for storing the employee's data
 const employeeSchema = new Schema({
     given_name: {
         type: String,

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
+// Model for storing stand ups
 const standUpSchema = new Schema(
     {
         question1: { type: String, required: true, max: 500 },

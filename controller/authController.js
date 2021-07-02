@@ -4,6 +4,8 @@ require("dotenv").config();
 const client = new OAuth2Client(`${process.env.CLIENT_ID}`);
 
 async function signIn(req, res) {
+    // Receives a token Id and sends a verification request to Google with that token Id. If verified, then session-token
+    //is placed in the cookies for the employee who is trying to login
     try {
         const { token } = req.body;
         const ticket = await client.verifyIdToken({
@@ -26,7 +28,7 @@ async function signIn(req, res) {
         res.json({
             status: "Success",
         });
-    } catch (err){
+    } catch (err) {
         res.json({
             status: "Failed",
             error: err.message,
@@ -35,6 +37,7 @@ async function signIn(req, res) {
 }
 
 async function verify(req, res) {
+    // Verifies if an employee is logged in or not and the session-token is valid or not.
     try {
         let token = req.cookies["session-token"];
         if (token) {
@@ -57,6 +60,7 @@ async function verify(req, res) {
 }
 
 async function protectRoute(req, res, next) {
+    // Middleware to protect all routes which require the  employee to be logged in
     try {
         let token = req.cookies["session-token"];
         if (token) {
@@ -79,6 +83,7 @@ async function protectRoute(req, res, next) {
 }
 
 function signOut(req, res) {
+    // Signs out an employee by clearing the session token.
     res.cookie("session-token", "wrongtoken");
     res.json({
         status: "Success",
